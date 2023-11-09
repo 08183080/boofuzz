@@ -10,8 +10,9 @@ def main():
     (procmon) and assumes that the FTP server is already running.
     """
     session = Session(target=Target(connection=TCPSocketConnection("127.0.0.1", 21)))
+    # session.crash
 
-    define_proto(session=session)
+    define_proto_static(session=session)
 
     session.fuzz()
 
@@ -22,14 +23,14 @@ def define_proto(session):
     user = Request("user", children=(
         String(name="key", default_value="USER"),
         Delim(name="space", default_value=" "),
-        String(name="val", default_value="anonymous"),
+        String(name="val", default_value="uploader"),
         Static(name="end", default_value="\r\n"),
     ))
 
     passw = Request("pass", children=(
         String(name="key", default_value="PASS"),
         Delim(name="space", default_value=" "),
-        String(name="val", default_value="james"),
+        String(name="val", default_value="Weakuploaderpassword111"),
         Static(name="end", default_value="\r\n"),
     ))
 
@@ -59,13 +60,13 @@ def define_proto_static(session):
     s_initialize("user")
     s_string("USER")
     s_delim(" ")
-    s_string("anonymous")
+    s_string("uploader", fuzzable=False)
     s_static("\r\n")
 
     s_initialize("pass")
     s_string("PASS")
     s_delim(" ")
-    s_string("james")
+    s_string("Weakuploaderpassword111", fuzzable=False)
     s_static("\r\n")
 
     s_initialize("stor")
